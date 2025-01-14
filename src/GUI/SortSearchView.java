@@ -47,8 +47,7 @@ public class SortSearchView extends JFrame {
                 }
             }
         });
-
-        
+ 
         JLabel lblSearchChar = new JLabel("Nhập ký tự cần tìm:");
         lblSearchChar.setPreferredSize(new Dimension(200, 20));
         txtSearchChar = new JTextField(15);

@@ -61,39 +61,43 @@ public class SortSearchController {
                 view.lstResult.setText("Vui lòng nhập n là số nguyên dương lớn hơn 0.");
                 return null;
             }
-
+            
             String inputText = view.txtInput.getText().trim();
-            // Sửa lại regex để kiểm tra chính xác số thực và dấu phân cách
-            if (!inputText.matches("(-?\\d+\\.?\\d*)([ ,]+(-?\\d+\\.?\\d*))*")) {
+
+            if (inputText.isEmpty()) {
+                view.lstResult.setText("Vui lòng nhập các phần tử.");
+                return null;
+            }
+
+            if (!inputText.matches("(-?\\d+(\\.\\d+)?)([ ,]+(-?\\d+(\\.\\d+)?))*")) {
                 view.lstResult.setText("Vui lòng nhập các phần tử hợp lệ: số thực, cách nhau bởi dấu phẩy hoặc khoảng trắng.");
                 return null;
             }
 
-            String[] input = inputText.split("[ ,]+");
+            String[] input = inputText.split("[ ]+");
+
             if (input.length != n) {
                 view.lstResult.setText("Vui lòng nhập đúng " + n + " phần tử.");
                 return null;
             }
 
             double[] arr = new double[n];
+
             for (int i = 0; i < n; i++) {
                 try {
-                    arr[i] = Double.parseDouble(input[i]); // Chuyển đổi thành số thực
+                    arr[i] = Double.parseDouble(input[i].trim()); 
                 } catch (NumberFormatException e) {
-                    view.lstResult.setText("Vui lòng nhập các phần tử là số thực.");
+                    view.lstResult.setText("Vui lòng nhập các phần tử là số thực hợp lệ.");
                     return null;
                 }
             }
+
             return arr;
         } catch (NumberFormatException e) {
             view.lstResult.setText("Vui lòng nhập n là số nguyên dương lớn hơn 0.");
             return null;
         }
     }
-
-
-
-
 
     public void handleSortSelection() {
     	double[] arr = processInput();
@@ -104,12 +108,10 @@ public class SortSearchController {
         model.selectionSort();
         long end = System.nanoTime();
 
-        double executionTime = (end - start) / 1_000_000.0; // Thời gian tính bằng mili giây
+        double executionTime = (end - start) / 1_000_000.0; 
 
-        // Tăng bộ đếm run count cho Selection Sort
-        model.incrementSelectionSortRunCount();  // Cần gọi đúng nơi này
+        model.incrementSelectionSortRunCount();  
 
-        // Lưu kết quả vào database
         model.addExecution("Selection Sort", arr.length, model.getSelectionSortRunCount(), executionTime);
 
         view.lstResult.setText("Mảng sau sắp xếp: " + java.util.Arrays.toString(model.getArr()));
@@ -120,18 +122,15 @@ public class SortSearchController {
     public void handleSortBubble() {
     	double[] arr = processInput();
         if (arr == null) return;
-
         model.setArr(arr);
         long start = System.nanoTime();
         model.bubbleSort();
         long end = System.nanoTime();
 
-        double executionTime = (end - start) / 1_000_000.0; // Thời gian tính bằng mili giây
+        double executionTime = (end - start) / 1_000_000.0; 
 
-        // Tăng bộ đếm run count cho Bubble Sort
         model.incrementBubbleSortRunCount();
 
-        // Lưu kết quả vào database
         model.addExecution("Bubble Sort", arr.length, model.getBubbleSortRunCount(), executionTime);
 
         view.lstResult.setText("Mảng sau sắp xếp: " + java.util.Arrays.toString(model.getArr()));
@@ -147,12 +146,10 @@ public class SortSearchController {
         model.insertionSort();
         long end = System.nanoTime();
 
-        double executionTime = (end - start) / 1_000_000.0; // Thời gian tính bằng mili giây
+        double executionTime = (end - start) / 1_000_000.0; 
 
-        // Tăng bộ đếm run count cho Insertion Sort
         model.incrementInsertionSortRunCount();
 
-        // Lưu kết quả vào database
         model.addExecution("Insertion Sort", arr.length, model.getInsertionSortRunCount(), executionTime);
 
         view.lstResult.setText("Mảng sau sắp xếp: " + java.util.Arrays.toString(model.getArr()));
@@ -199,8 +196,8 @@ public class SortSearchController {
 
     private void handleSearch() {
         try {
-            double x = Double.parseDouble(view.txtSearchChar.getText()); // Chuyển đổi sang double
-            String result = model.findCharacterWithNeighbors(x); // Gọi hàm tìm kiếm với kiểu double
+            double x = Double.parseDouble(view.txtSearchChar.getText()); 
+            String result = model.findCharacterWithNeighbors(x); 
             view.lstSearchResult.setText(result);
         } catch (NumberFormatException ex) {
             view.lstSearchResult.setText("Vui lòng nhập đúng dữ liệu (số thực hoặc số nguyên).");

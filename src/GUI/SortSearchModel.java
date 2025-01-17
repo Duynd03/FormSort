@@ -18,102 +18,69 @@ public class SortSearchModel {
     public SortSearchModel() {
         connection = Data.DatabaseConnection.getConnection();
     }
-
     public void setArr(double[] arr) {
         this.arr = arr;
     }
-
-    // Phương thức để lấy giá trị mảng
     public double[] getArr() {
         return arr;
     }
- // Các phương thức tăng bộ đếm số lần chạy cho từng thuật toán
     public void incrementSelectionSortRunCount() {
         selectionSortRunCount++;
     }
-
     public int getSelectionSortRunCount() {
         return selectionSortRunCount;
     }
-
     public void incrementBubbleSortRunCount() {
         bubbleSortRunCount++;
     }
-
     public int getBubbleSortRunCount() {
         return bubbleSortRunCount;
     }
-
     public void incrementInsertionSortRunCount() {
         insertionSortRunCount++;
     }
-
     public int getInsertionSortRunCount() {
         return insertionSortRunCount;
     }
-
     public void incrementMergeSortRunCount() {
         mergeSortRunCount++;
     }
-
     public int getMergeSortRunCount() {
         return mergeSortRunCount;
     }
-
     public void incrementQuickSortRunCount() {
         quickSortRunCount++;
     }
-
     public int getQuickSortRunCount() {
         return quickSortRunCount;
     }
-
-
-    // Thêm một kết quả thực thi và lưu vào cơ sở dữ liệu
- // Thêm một kết quả thực thi và lưu vào cơ sở dữ liệu
     public void addExecution(String algorithmName, int numberOfElements, int runCount, double executionTime) {
-        // Tạo đối tượng AlgorithmExecution với số lần chạy và thời gian thực thi
         AlgorithmExecution execution = new AlgorithmExecution(algorithmName, numberOfElements, runCount, executionTime);
-
-        // Thêm kết quả vào danh sách
         executions.add(execution);
-
-        // Lưu kết quả vào cơ sở dữ liệu (hoặc thực hiện hành động khác)
         saveExecutionToDatabase(execution);
     }
-
-
-
-    // Lấy danh sách kết quả thực thi
     public List<AlgorithmExecution> getExecutions() {
         return executions;
     }
-
     // Chuyển List<AlgorithmExecution> thành mảng AlgorithmExecution[]
     public AlgorithmExecution[] getExecutionsArray() {
         return executions.toArray(new AlgorithmExecution[0]);
     }
-
-    // Lưu kết quả thực thi vào cơ sở dữ liệu
     private void saveExecutionToDatabase(AlgorithmExecution execution) {
         String query = "INSERT INTO algorithm_executions (algorithm_name, number_of_elements, run_count, execution_time) VALUES (?, ?, ?, ?)";
-
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, execution.getAlgorithmName());
             stmt.setInt(2, execution.getNumberOfElements());
             stmt.setInt(3, execution.getRunCount());
             stmt.setDouble(4, execution.getExecutionTime());
-
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error saving execution data to database: " + e.getMessage());
         }
     }
-
     public String findCharacterWithNeighbors(double x) {
         StringBuilder result = new StringBuilder();
         boolean found = false;
-
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == x) { 
                 found = true;
@@ -126,14 +93,11 @@ public class SortSearchModel {
                       .append("\n"); 
             }
         }
-
         if (!found) {
             return "Không tìm thấy ký tự.";
         }
-
         return result.toString();
     }
-
     public void selectionSort() {
     	resetRunCount();
         for (int i = 0; i < arr.length - 1; i++) {
@@ -148,9 +112,7 @@ public class SortSearchModel {
             arr[i] = arr[p];
             arr[p] = temp;
         }
-
     }
-
     public void bubbleSort() {
     	resetRunCount();
         for (int i = 0; i < arr.length - 1; i++) {
@@ -164,7 +126,6 @@ public class SortSearchModel {
             }
         }
     }
-
     public void insertionSort() {
     	resetRunCount();
         for (int i = 1; i < arr.length; i++) {
@@ -179,17 +140,13 @@ public class SortSearchModel {
             arr[j + 1] = key;
         }
     }
-
     public void mergeSort(double[] arr2, int L, int R) {
         if (L < R) { 
             int M = (L + R) / 2;
-
             mergeSort(arr2, L, M);
             mergeSort(arr2, M + 1, R); 
-
             double[] b = new double[R - L + 1]; 
             int i = L, j = M + 1, k = 0;
-
             while (i <= M && j <= R) {
                 mergeSortRunCount++; 
                 if (arr2[i] < arr2[j]) {
@@ -198,38 +155,28 @@ public class SortSearchModel {
                     b[k++] = arr2[j++];
                 }
             }
-
             while (i <= M) {
                 mergeSortRunCount++; 
                 b[k++] = arr2[i++];
             }
-
             while (j <= R) {
                 mergeSortRunCount++; // Đếm số lần xử lý (không có so sánh)
                 b[k++] = arr2[j++];
             }
-
             for (int m = 0; m < R - L + 1; m++) {
                 arr2[L + m] = b[m];
             }
         }
     }
-
-
-
     public void quickSort(double[] a, int L, int R) {
         if (L >= R) return;
-
         double pivot = a[(L + R) / 2];
         int i = L, j = R;
-
         while (i <= j) {
-         
             while (a[i] < pivot) {
                 i++;
                 quickSortRunCount++;
             }
-
             while (a[j] > pivot) {
                 j--;
                 quickSortRunCount++; 
@@ -242,11 +189,9 @@ public class SortSearchModel {
                 j--;
             }
         }
-
         if (L < j) quickSort(a, L, j);
         if (i < R) quickSort(a, i, R);
     }
-
     public void resetRunCount() {
         selectionSortRunCount = 0;
         bubbleSortRunCount = 0;
@@ -254,8 +199,4 @@ public class SortSearchModel {
         mergeSortRunCount = 0;
         quickSortRunCount = 0;
     }
-   
-
-    
-
 }

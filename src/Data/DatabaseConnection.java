@@ -8,7 +8,7 @@ public class DatabaseConnection {
     public static Connection getConnection() {
 
         String url = "jdbc:mysql://localhost:3306/sortarray"; 
-        String username = "root"; // 
+        String username = "root"; 
         String password = "123456"; 
 
         Connection connection = null;
@@ -16,8 +16,6 @@ public class DatabaseConnection {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(url, username, password);
-
-            System.out.println("Kết nối thành công!");
         } catch (ClassNotFoundException e) {
             System.err.println("Lỗi: Không tìm thấy Driver MySQL.");
             e.printStackTrace();
@@ -31,3 +29,4 @@ public class DatabaseConnection {
 
 
 }
+//code sao để trả ra  thuật toán nào là tối ưu nhất, trả ra 1 cái thống kê
